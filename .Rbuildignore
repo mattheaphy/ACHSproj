@@ -1,0 +1,9 @@
+^LICENSE\.md$
+^CLAUDE\.md$
+^CLAUDE\.local\.md$
+^\.claude$
+^data-raw$
+^README\.Rmd$
+^\.Rproj\.user$
+^README_files$
+^tmp_

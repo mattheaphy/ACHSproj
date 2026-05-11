@@ -1,0 +1,8 @@
+.Rhistory
+.RData
+.Rproj.user
+*.Rproj
+CLAUDE.local.md
+settings.local.json
+/.quarto/
+tmp_*
