@@ -1,10 +1,18 @@
 
 # ACHSproj
 
-Companion package for the ACHS Spring 2026 talk. It provides tools for
+Companion package for the ACHS Spring 2026 talk, "Actuarial Modeling Reimagined: AI, Cloud, and Competitive Platforms". It provides tools for
 projecting payout annuity cashflows, computing present values and IRRs,
 and visualising results — all built on S7 classes and the
 vctrs/tidyverse ecosystem.
+
+## Installation
+
+This package is not available on CRAN, but it can be installed from GitHub with:
+
+``` r
+pak::pak("mattheaphy/ACHSproj")
+```
 
 ## Projecting a payout annuity
 
