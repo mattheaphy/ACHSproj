@@ -1,0 +1,30 @@
+Package: ACHSproj
+Title: ACHS 2026 Talk Examples
+Version: 0.0.0.9000
+Authors@R:
+    person("Matt", "Heaphy", , "matt.heaphy@martellore.com", role = c("aut", "cre"))
+Description: Companion package for the ACHS Spring 2026 session "Actuarial 
+  Modeling Reimagined". This package contains a small object system and function 
+  for projecting payout annuity benefits.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports:
+    cli,
+    dplyr,
+    lubridate,
+    purrr,
+    rlang,
+    S7,
+    tibble,
+    vctrs
+Suggests: 
+    testthat (>= 3.0.0),
+    tidyr,
+    ggplot2,
+    scales
+Config/testthat/edition: 3
+Depends: 
+    R (>= 3.5)
+LazyData: true

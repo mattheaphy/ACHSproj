@@ -1,0 +1,111 @@
+---
+output: github_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(ACHSproj)
+```
+
+# ACHSproj
+
+Companion package for the ACHS Spring 2026 talk. It provides tools for
+projecting payout annuity cashflows, computing present values and IRRs, and
+visualising results — all built on S7 classes and the vctrs/tidyverse
+ecosystem.
+
+## Projecting a payout annuity
+
+`annuity_cf()` is the core function. It builds a monthly projection for a
+deferred, life-contingent payout annuity and returns a `projection` object
+whose `@data` tibble contains mortality, cashflow, and reserve columns.
+
+Key assumptions in this projection:
+
+- Mortality follows the 2012 Individual Annuity Mortality Basic table
+- Mortality improvement follows Projection Scale G2 with improvements from 2012
+- A single deterministic discount rate
+- Monthly cashflows
+
+```{r annuity-example}
+p <- annuity_cf(
+  issue_age    = 60,
+  benefit      = 8,       # annual benefit amount
+  premium      = 100,     # single premium at time 0
+  defer_years  = 2L,      # 2-year deferral period
+  certain_years = 3L,     # 3-year certain period
+  refund       = TRUE,    # return-of-premium death benefit
+  disc         = 0.05,    # annual discount rate
+  start_date   = "2026-05-06"
+)
+
+p
+```
+
+Key columns in `p@data`:
+
+| Column | Description |
+|---|---|
+| `tpx` | Cumulative survival probability from time 0 |
+| `premium` | Single premium inflow at time 0 |
+| `certain_cf` | Guaranteed benefit payments during the certain period |
+| `life_cf` | Life-contingent benefit payments after the certain period |
+| `death_cf` | Return-of-premium death benefit (when `refund = TRUE`) |
+| `total_cf` | Sum of all cashflows |
+| `reserve` | Prospective reserve — PV of future cashflows at each period |
+
+**NOTE:** The `reserve` column is for illustrative purposes only and is not meant to represent a realistic reserve that would be held under any particular regulatory regime.
+
+## Support functions
+
+### `pv()` — present value
+
+`pv()` works on both plain numeric vectors and `projection` objects.
+
+```{r pv-vector}
+# PV of a simple cash flow stream: invest 100 today, receive 110 in one year
+pv(c(-100, 110), disc = 0.05, freq = 1L)
+```
+
+On a `projection`, it returns a tibble of present values for every `cf_vec`
+column, discounted at the stored rate by default.
+
+```{r pv-projection}
+pv(p)
+```
+
+The `rolling = TRUE` option returns the prospective reserve at every time step
+— that is, the PV of cashflows still to come, discounted back to that moment.
+This is what populates the `reserve` column automatically.
+
+```{r pv-rolling}
+head(pv(p, rolling = TRUE)$total_cf, 10)
+```
+
+### `irr()` — internal rate of return
+
+`irr()` finds the discount rate at which the PV of a cashflow stream is zero.
+
+```{r irr-vector}
+# Invest 100, receive 110 in one year — IRR should be 10%
+irr(c(-100, 110), freq = 1L)
+```
+
+On a `projection`, `irr()` operates on `total_cf` and returns the **cost of
+funds** — the rate at which the insurer breaks even on the contract.
+
+```{r irr-projection}
+irr(p)
+```
+
+### `plot()` — cashflow and reserve chart
+
+`plot()` produces a two-panel chart: the top panel shows the cashflow
+components over time, and the bottom panel shows the prospective reserve.
+
+```{r plot, fig.alt = "Two-panel line chart of payout annuity cashflows and reserve"}
+plot(p)
+```
