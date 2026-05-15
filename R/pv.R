@@ -1,5 +1,6 @@
 #' @importFrom S7 new_generic method `method<-` new_S3_class class_numeric S7_dispatch
 #' @importFrom dplyr select where
+#' @importFrom purrr map
 NULL
 
 #' Present value of a cashflow object
@@ -70,7 +71,7 @@ method(pv, projection) <- function(
   }
   x@data |>
     select(where(\(col) inherits(col, "cf_vec"))) |>
-    purrr::map(\(col) {
+    map(\(col) {
       pv(col, disc, disc_freq = disc_freq, rolling = rolling)
     }) |>
     tibble::as_tibble()
