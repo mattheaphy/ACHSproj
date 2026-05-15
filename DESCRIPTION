@@ -26,5 +26,5 @@ Suggests:
     scales
 Config/testthat/edition: 3
 Depends: 
-    R (>= 3.5)
+    R (>= 4.1)
 LazyData: true
