@@ -1,0 +1,19 @@
+utils::globalVariables(c(
+  ".env",
+  "age",
+  "certain_cf",
+  "death_cf",
+  "hist_pay",
+  "life_cf",
+  "mi",
+  "pol_yr",
+  "premium",
+  "px",
+  "qx",
+  "qx_adj",
+  "qx_iamb",
+  "scale_g2",
+  "total_cf",
+  "tpx",
+  "years_imp"
+))
